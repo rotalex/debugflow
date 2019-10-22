@@ -1,5 +1,5 @@
 
-## OnTheFlyDebugger : a service that checks and runs the code as you write it ##
+## DebugFlow: a service that checks and runs the code as you write it ##
 
 Simple python debugger that parses and executes an unit test language.
 If while, then show just first iteration, allow selecting specific iterations
