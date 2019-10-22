@@ -6,19 +6,19 @@ If while, then show just first iteration, allow selecting specific iterations
 in loops.
 
 Specifications:
-		* should work on incomplete code/ASTs
-		* start and code sections with special markings: '###'
-		* support only sections of code less than 50 instructions
-		* support self contained code, no lateral effects, no function call evaluation
-		* we select the starting points for "data flow" with ## and a list of values in the language we are interpreting
-		* we annotate only identifiers with data flow values
-		* each annotation overrides inferred/derived annotations
+* should work on incomplete code/ASTs
+* start and code sections with special markings: '###'
+* support only sections of code less than 50 instructions
+* support self contained code, no lateral effects, no function call evaluation
+* we select the starting points for "data flow" with ## and a list of values in the language we are interpreting
+* we annotate only identifiers with data flow values
+* each annotation overrides inferred/derived annotations
  
 Interface:
-		* introduce comments with a key-value structure under the analyzed line
-		* for each expression we show the value on a a line
-		* the comments cannot be longer than 10 lines for each line of code
-		* and the length of a line is maximum 80 chars
+* introduce comments with a key-value structure under the analyzed line
+* for each expression we show the value on a a line
+* the comments cannot be longer than 10 lines for each line of code
+* and the length of a line is maximum 80 chars
 
 Example:
 
