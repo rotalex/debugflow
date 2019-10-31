@@ -13,7 +13,9 @@ Specifications:
 * we select the starting points for "data flow" with ## and a list of values in the language we are interpreting
 * we annotate only identifiers with data flow values
 * each annotation overrides inferred/derived annotations
- 
+
+The main idea is to execute code as you type it so you could catch the bugs as
+early as possible, the following is just simplest version of interface. 
 Interface:
 * introduce comments with a key-value structure under the analyzed line
 * for each expression we show the value on a a line
