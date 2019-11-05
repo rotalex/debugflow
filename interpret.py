@@ -51,6 +51,7 @@ class DebugFlow:
 		self.interpreter = interp if interp else Interpreter()
 		self.interpreter.getoutput() # get out the python notice
 		self.seen = set()
+<<<<<<< HEAD
 		self.stream = print
 
 	def traverseAttribute(self, node: ast.Attribute, call: bool = False):
@@ -126,11 +127,17 @@ class DebugFlow:
 			or isinstance(node, ast.Str)
 
 	def traverse(self, node, call=False):
+=======
+
+	def traverse(self, node, insideCall=False):
+		#TODO(rotaru): fix repetitive evaluation of the same name/expression
+>>>>>>> 3e7cfa3fb581580d0e11a0f4a5894f8d78166b93
 		if node in self.seen:
 			return
 		else:
 			self.seen.add(node)
 
+<<<<<<< HEAD
 		if self.untraversable(node):
 			return
 
@@ -170,6 +177,78 @@ class DebugFlow:
 		# whole code snippet at once. This will be changed in the future.
 		print(code)
 		self.traverse(ast.parse(code))
+=======
+		if isinstance(node, ast.Store) or \
+			isinstance(node, ast.Load) or \
+			isinstance(node, ast.Num):
+			return
+
+		if isinstance(node, ast.Name):
+			self.interpreter.interpret(node.id)
+			print(f"#{node.id} = {self.interpreter.getoutput()}")
+		elif isinstance(node, ast.Attribute):
+			if insideCall:
+				self.traverse(node.value)
+			else:
+				select_stmt = astunparse.unparse(node)
+				self.interpreter.interpret(select_stmt)
+				print(f"#{select_stmt} = {self.interpreter.getoutput()}")
+		elif isinstance(node, ast.Assign):
+			for expr in ast.walk(node.value):
+				self.traverse(expr)
+			code = astunparse.unparse(node)
+			self.interpreter.interpret(code)
+			for target in node.targets:
+				stored = f"{target.id}"
+				self.interpreter.interpret(stored)
+				print(f"#{stored} = {self.interpreter.getoutput()}")
+		elif isinstance(node, ast.For):
+			code = astunparse.unparse(node)
+			self.interpreter.interpret(code)
+			code = "\tpass"
+			self.interpreter.interpret(code)
+			self.interpreter.getoutput()
+			self.traverse(node.target)
+			self.traverse(node.iter)
+		elif isinstance(node, ast.BinOp):
+			args = [node.left, node.right]
+			for arg in args:
+				self.traverse(arg)
+		elif isinstance(node, ast.Attribute):
+			self.interpreter.interpret(node.value)
+			print(f"#{node.id} = {self.interpreter.getoutput()}")
+		elif isinstance(node, ast.Call):
+			code = astunparse.unparse(node)
+			self.interpreter.interpret(code)
+			print(f"#{code.strip()} = {self.interpreter.getoutput()}")
+			if isinstance(node.func, ast.Expr) \
+				or isinstance(node.func, ast.Attribute):
+				self.traverse(node.func, insideCall=True)
+			for arg in node.args:
+				self.traverse(arg)
+		elif isinstance(node, ast.Expr):
+			self.traverse(node.value)
+		elif isinstance(node, ast.Return):
+			self.traverse(node.value)
+		elif isinstance(node, ast.Module) or isinstance(node, ast.FunctionDef):
+			if isinstance(node, ast.FunctionDef):
+				comments = ast.get_docstring(node)
+				values = eval(comments)
+				for idx, funcArg in enumerate(node.args.args):
+					code = f"{funcArg.arg} = {values[idx]}"
+					self.interpreter.interpret(code)
+					self.interpreter.getoutput()
+			for stmt in node.body:
+				self.traverse(stmt)
+
+	def flow(self, code):
+		# For now we take the whole code since we might get invalid code so we
+		# could try to discard lines to have correct code.
+		print(code)
+		tree = ast.parse(code)
+		for node in ast.walk(tree):
+			self.traverse(node)
+>>>>>>> 3e7cfa3fb581580d0e11a0f4a5894f8d78166b93
 
 
 
