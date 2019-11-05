@@ -44,8 +44,8 @@ class Interpreter:
 
 class DebugFlow:
 	"""
-		DebugFlow contain the logic for ast traversal, detecting what object to
-		render and what subexpression to display.
+	DebugFlow contain the logic for ast traversal, detecting what object to
+	render and what subexpression to display.
 	"""
 	def __init__(self, interp = None):
 		self.interpreter = interp if interp else Interpreter()
@@ -170,8 +170,6 @@ class DebugFlow:
 		# whole code snippet at once. This will be changed in the future.
 		print(code)
 		self.traverse(ast.parse(code))
-
-
 
 def runTests(debug):
 	with open("scenarios.py", "r") as f:
