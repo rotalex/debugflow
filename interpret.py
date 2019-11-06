@@ -44,14 +44,14 @@ class Interpreter:
 
 class DebugFlow:
 	"""
-	DebugFlow contain the logic for ast traversal, detecting what object to
+	DebugFlow contain the logic for AST traversal, detecting what object to
 	render and what subexpression to display.
 	"""
-	def __init__(self, interp = None):
+	def __init__(self, interp=None, stream=print):
 		self.interpreter = interp if interp else Interpreter()
 		self.interpreter.getoutput() # get out the python notice
 		self.seen = set()
-		self.stream = print
+		self.stream = stream
 
 	def traverseAttribute(self, node: ast.Attribute, call: bool = False):
 		if call:
